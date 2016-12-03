@@ -11,6 +11,19 @@ int playerScore = 0, aiScore = 0, playerPos = 0, aiPos = 0;
 char ballDirectionHori = 'R', ballDirectionVerti = 'S';
 boolean inProgress = true;
 
+void moveAi();
+void drawScore();
+void eraseScore();
+void drawNet();
+void drawPixel(int posX, int posY, int dimensions);
+void erasePixel(int posX, int posY, int dimensions);
+void erasePlayerPaddle(int row);
+void drawPlayerPaddle(int row);
+void drawAiPaddle(int row);
+void eraseAiPaddle(int row);
+void drawBall(int x, int y);
+void eraseBall(int x, int y);
+
 void setup() {
 	display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 	display.display();
