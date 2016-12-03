@@ -15,6 +15,8 @@
 
 #define PADDLE_HEIGHT 5
 
+#define MAX_SCORE 9
+
 /******************************************************************************/
 /*------------------------Private Variables/Constants-------------------------*/
 /******************************************************************************/
@@ -98,7 +100,7 @@ void setup() {
 void loop() {
 	display.clearDisplay();
 
-	if (ai.score > 9 || player.score > 9) {
+	if (ai.score > MAX_SCORE || player.score > MAX_SCORE) {
 		// somebody has won
 		display.setTextSize(4);
 		display.setTextColor(WHITE);
