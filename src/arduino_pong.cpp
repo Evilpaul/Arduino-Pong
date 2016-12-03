@@ -63,7 +63,7 @@ typedef struct
 
 typedef struct
 {
-	int position[2] = {20, (RESOLUTION[IDX_Y] / 2)};
+	int position[2] = {COLLISION_WIDTH, (RESOLUTION[IDX_Y] / 2)};
 	HzDir dirHori = HzDir_Right;
 	VtDir dirVert = VtDir_Straight;
 } ballData;
