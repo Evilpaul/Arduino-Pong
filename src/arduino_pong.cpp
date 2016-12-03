@@ -13,14 +13,18 @@
 #define IDX_X 0
 #define IDX_Y 1
 
+#define PIXEL_SIZE 8
+#define WALL_WIDTH 4
+#define PADDLE_WIDTH 4
 #define PADDLE_HEIGHT 5
+#define BALL_SIZE 4
+#define SPEED 3
 
 #define MAX_SCORE 9
 
 /******************************************************************************/
 /*------------------------Private Variables/Constants-------------------------*/
 /******************************************************************************/
-const int PIXEL_SIZE = 8, WALL_WIDTH = 4, PADDLE_WIDTH = 4, BALL_SIZE = 4, SPEED = 3;
 const int RESOLUTION[2] = { 128, 64 };
 const int PLAYER_COLUMN = 0;
 const int AI_COLUMN = RESOLUTION[IDX_X] - PADDLE_WIDTH;
