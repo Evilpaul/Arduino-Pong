@@ -18,6 +18,8 @@
 /******************************************************************************/
 const int PIXEL_SIZE = 8, WALL_WIDTH = 4, PADDLE_WIDTH = 4, BALL_SIZE = 4, SPEED = 3;
 const int RESOLUTION[2] = { 128, 64 };
+const int PLAYER_COLUMN = 0;
+const int AI_COLUMN = RESOLUTION[IDX_X] - PADDLE_WIDTH;
 
 /******************************************************************************/
 /*--------------------------------Enumerations--------------------------------*/
@@ -67,8 +69,7 @@ void moveAi();
 void drawScore();
 void drawNet();
 void drawPixel(int posX, int posY, int dimensions);
-void drawPlayerPaddle(int row);
-void drawAiPaddle(int row);
+void drawPaddle(int row, int column);
 void drawBall(int x, int y);
 
 /******************************************************************************/
@@ -166,9 +167,9 @@ void loop() {
 		drawBall(ball.position[IDX_X], ball.position[IDX_Y]);
 		player.position = analogRead(A2); // read player potentiometer
 		player.position = map(player.position, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
-		drawPlayerPaddle(player.position);
+		drawPaddle(PLAYER_COLUMN, player.position);
 		moveAi();
-		drawAiPaddle(ai.position);
+		drawPaddle(AI_COLUMN, ai.position);
 		drawNet();
 		drawScore();
 	}
@@ -211,16 +212,7 @@ void drawPixel(int posX, int posY, int dimensions) {
 	}
 }
 
-void drawPlayerPaddle(int row) {
-	drawPixel(0, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH);
-	drawPixel(0, row - PADDLE_WIDTH, PADDLE_WIDTH);
-	drawPixel(0, row, PADDLE_WIDTH);
-	drawPixel(0, row + PADDLE_WIDTH, PADDLE_WIDTH);
-	drawPixel(0, row + (PADDLE_WIDTH * 2), PADDLE_WIDTH);
-}
-
-void drawAiPaddle(int row) {
-	int column = resolution[IDX_X] - PADDLE_WIDTH;
+void drawPaddle(int row, int column) {
 	drawPixel(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH);
 	drawPixel(column, row - PADDLE_WIDTH, PADDLE_WIDTH);
 	drawPixel(column, row, PADDLE_WIDTH);
