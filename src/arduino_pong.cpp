@@ -217,7 +217,7 @@ void drawPlayerPaddle(int row) {
 	drawPixel(0, row - PADDLE_WIDTH, PADDLE_WIDTH);
 	drawPixel(0, row, PADDLE_WIDTH);
 	drawPixel(0, row + PADDLE_WIDTH, PADDLE_WIDTH);
-	drawPixel(0, row + (PADDLE_WIDTH + 2), PADDLE_WIDTH);
+	drawPixel(0, row + (PADDLE_WIDTH * 2), PADDLE_WIDTH);
 }
 
 void drawAiPaddle(int row) {
