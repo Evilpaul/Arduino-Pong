@@ -38,16 +38,11 @@ boolean inProgress = true;
 /******************************************************************************/
 void moveAi();
 void drawScore();
-void eraseScore();
 void drawNet();
 void drawPixel(int posX, int posY, int dimensions);
-void erasePixel(int posX, int posY, int dimensions);
-void erasePlayerPaddle(int row);
 void drawPlayerPaddle(int row);
 void drawAiPaddle(int row);
-void eraseAiPaddle(int row);
 void drawBall(int x, int y);
-void eraseBall(int x, int y);
 
 /******************************************************************************/
 /*-------------------------Function Implementations---------------------------*/
@@ -59,15 +54,14 @@ void setup() {
 }
 
 void loop() {
+	display.clearDisplay();
+
 	if (aiScore > 9 || playerScore > 9) {
 		// check game state
 		inProgress = false;
 	}
 
 	if (inProgress) {
-		eraseScore();
-		eraseBall(ball[0], ball[1]);
-
 		if (ballDirectionVerti == 'U') {
 			// move ball up diagonally
 			ball[1] = ball[1] - SPEED;
@@ -143,7 +137,6 @@ void loop() {
 			}
 		}
 		drawBall(ball[0], ball[1]);
-		erasePlayerPaddle(playerPos);
 		playerPos = analogRead(A2); // read player potentiometer
 		playerPos = map(playerPos, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
 		drawPlayerPaddle(playerPos);
@@ -169,7 +162,6 @@ void loop() {
 
 void moveAi() {
 	// move the AI paddle
-	eraseAiPaddle(aiPos);
 	if (ball[1] > aiPos) {
 		++aiPos;
 	} else if (ball[1] < aiPos) {
@@ -182,17 +174,6 @@ void drawScore() {
 	// draw AI and player scores
 	display.setTextSize(2);
 	display.setTextColor(WHITE);
-	display.setCursor(45, 0);
-	display.println(playerScore);
-
-	display.setCursor(75, 0);
-	display.println(aiScore);
-}
-
-void eraseScore() {
-	// erase AI and player scores
-	display.setTextSize(2);
-	display.setTextColor(BLACK);
 	display.setCursor(45, 0);
 	display.println(playerScore);
 
@@ -216,23 +197,6 @@ void drawPixel(int posX, int posY, int dimensions) {
 	}
 }
 
-void erasePixel(int posX, int posY, int dimensions) {
-	// erase group of pixels
-	for (int x = 0; x < dimensions; ++x) {
-		for (int y = 0; y < dimensions; ++y) {
-			display.drawPixel((posX + x), (posY + y), BLACK);
-		}
-	}
-}
-
-void erasePlayerPaddle(int row) {
-	erasePixel(0, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH);
-	erasePixel(0, row - PADDLE_WIDTH, PADDLE_WIDTH);
-	erasePixel(0, row, PADDLE_WIDTH);
-	erasePixel(0, row + PADDLE_WIDTH, PADDLE_WIDTH);
-	erasePixel(0, row + (PADDLE_WIDTH + 2), PADDLE_WIDTH);
-}
-
 void drawPlayerPaddle(int row) {
 	drawPixel(0, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH);
 	drawPixel(0, row - PADDLE_WIDTH, PADDLE_WIDTH);
@@ -250,19 +214,6 @@ void drawAiPaddle(int row) {
 	drawPixel(column, row + (PADDLE_WIDTH * 2), PADDLE_WIDTH);
 }
 
-void eraseAiPaddle(int row) {
-	int column = resolution[0] - PADDLE_WIDTH;
-	erasePixel(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH);
-	erasePixel(column, row - PADDLE_WIDTH, PADDLE_WIDTH);
-	erasePixel(column, row, PADDLE_WIDTH);
-	erasePixel(column, row + PADDLE_WIDTH, PADDLE_WIDTH);
-	erasePixel(column, row + (PADDLE_WIDTH * 2), PADDLE_WIDTH);
-}
-
 void drawBall(int x, int y) {
 	display.drawCircle(x, y, BALL_SIZE, WHITE);
-}
-
-void eraseBall(int x, int y) {
-	display.drawCircle(x, y, BALL_SIZE, BLACK);
 }
