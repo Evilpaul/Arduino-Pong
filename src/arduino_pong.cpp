@@ -23,6 +23,9 @@ const int RESOLUTION[2] = { 128, 64 };
 const int PLAYER_COLUMN = 0;
 const int AI_COLUMN = RESOLUTION[IDX_X] - PADDLE_WIDTH;
 
+const int COLLISION_HEIGHT = ((PADDLE_WIDTH * PADDLE_HEIGHT) / 2) + (BALL_SIZE / 2);
+const int COLLISION_WIDTH = PADDLE_WIDTH + (BALL_SIZE / 2);
+
 /******************************************************************************/
 /*--------------------------------Enumerations--------------------------------*/
 /******************************************************************************/
@@ -114,14 +117,14 @@ void loop() {
 
 		ball.position[IDX_X] = ball.position[IDX_X] + (SPEED * ball.dirHori); // move ball
 		if (ball.dirHori == HzDir_Right) {
-			if (ball.position[IDX_X] >= (RESOLUTION[IDX_X] - 6)) {
+			if (ball.position[IDX_X] >= (RESOLUTION[IDX_X] - COLLISION_WIDTH)) {
 				// ball is at the AI edge of the screen
-				if ((ai.position + 12) >= ball.position[IDX_Y] && (ai.position - 12) <= ball.position[IDX_Y]) {
+				if ((ai.position + COLLISION_HEIGHT) >= ball.position[IDX_Y] && (ai.position - COLLISION_HEIGHT) <= ball.position[IDX_Y]) {
 					// ball hits AI paddle
-					if (ball.position[IDX_Y] > (ai.position + 4)) {
+					if (ball.position[IDX_Y] > (ai.position + PADDLE_WIDTH)) {
 						// deflect ball down
 						ball.dirVert = VtDir_Down;
-					} else if (ball.position[IDX_Y] < (ai.position - 4)) {
+					} else if (ball.position[IDX_Y] < (ai.position - PADDLE_WIDTH)) {
 						// deflect ball up
 						ball.dirVert = VtDir_Up;
 					} else {
@@ -132,7 +135,7 @@ void loop() {
 					ball.dirHori = HzDir_Left;
 				} else {
 					// GOAL!
-					ball.position[IDX_X] = 6; // move ball to other side of screen
+					ball.position[IDX_X] = COLLISION_WIDTH; // move ball to other side of screen
 					ball.dirVert = VtDir_Straight; // reset ball to straight travel
 					ball.position[IDX_Y] = RESOLUTION[IDX_Y] / 2; // move ball to middle of screen
 					++player.score; // increase player score
@@ -141,15 +144,15 @@ void loop() {
 		}
 
 		if (ball.dirHori == HzDir_Left) {
-			if (ball.position[IDX_X] <= 6) {
+			if (ball.position[IDX_X] <= COLLISION_WIDTH) {
 				// ball is at the player edge of the screen
-				if ((player.position + 12) >= ball.position[IDX_Y]
-						&& (player.position - 12) <= ball.position[IDX_Y]) {
+				if ((player.position + COLLISION_HEIGHT) >= ball.position[IDX_Y]
+						&& (player.position - COLLISION_HEIGHT) <= ball.position[IDX_Y]) {
 					// ball hits player paddle
-					if (ball.position[IDX_Y] > (player.position + 4)) {
+					if (ball.position[IDX_Y] > (player.position + PADDLE_WIDTH)) {
 						// deflect ball down
 						ball.dirVert = VtDir_Down;
-					} else if (ball.position[IDX_Y] < (player.position - 4)) {
+					} else if (ball.position[IDX_Y] < (player.position - PADDLE_WIDTH)) {
 						// deflect ball up
 						ball.dirVert = VtDir_Up;
 					} else {
@@ -159,7 +162,7 @@ void loop() {
 					// change ball direction
 					ball.dirHori = HzDir_Right;
 				} else {
-					ball.position[IDX_X] = RESOLUTION[IDX_X] - 6; // move ball to other side of screen
+					ball.position[IDX_X] = RESOLUTION[IDX_X] - COLLISION_WIDTH; // move ball to other side of screen
 					ball.dirVert = VtDir_Straight; // reset ball to straight travel
 					ball.position[IDX_Y] = RESOLUTION[IDX_Y] / 2; // move ball to middle of screen
 					++ai.score; // increase AI score
