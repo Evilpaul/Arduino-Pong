@@ -54,6 +54,7 @@ void eraseBall(int x, int y);
 /******************************************************************************/
 void setup() {
 	display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+	display.clearDisplay();
 	display.display();
 }
 
