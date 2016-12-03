@@ -32,15 +32,21 @@ typedef struct
 	int position = 0;
 } playerData;
 
+typedef struct
+{
+	int position[2] = {20, (resolution[IDX_Y] / 2)};
+	char dirHori = 'R';
+	char dirVert = 'S';
+} ballData;
+
 /******************************************************************************/
 /*------------------------------Global variables------------------------------*/
 /******************************************************************************/
 Adafruit_SSD1306 display(OLED_RESET);
 
-char ballDirectionHori = 'R', ballDirectionVerti = 'S';
-
 playerData player;
 playerData ai;
+ballData ball;
 
 /******************************************************************************/
 /*-------------------------Function Prototypes--------------------------------*/
@@ -79,81 +85,81 @@ void loop() {
 		}
 	}
 	else {
-		if (ballDirectionVerti == 'U') {
+		if (ball.dirVert == 'U') {
 			// move ball up diagonally
-			ball[IDX_Y] = ball[IDX_Y] - SPEED;
+			ball.position[IDX_Y] = ball.position[IDX_Y] - SPEED;
 		}
 
-		if (ballDirectionVerti == 'D') {
+		if (ball.dirVert == 'D') {
 			// move ball down diagonally
-			ball[IDX_Y] = ball[IDX_Y] + SPEED;
+			ball.position[IDX_Y] = ball.position[IDX_Y] + SPEED;
 		}
 
-		if (ball[IDX_Y] <= 0) {
+		if (ball.position[IDX_Y] <= 0) {
 			// bounce the ball off the top
-			ballDirectionVerti = 'D';
+			ball.dirVert = 'D';
 		}
-		if (ball[IDX_Y] >= resolution[IDX_Y]) {
+		if (ball.position[IDX_Y] >= resolution[IDX_Y]) {
 			// bounce the ball off the bottom
-			ballDirectionVerti = 'U';
+			ball.dirVert = 'U';
 		}
 
-		if (ballDirectionHori == 'R') {
-			ball[IDX_X] = ball[IDX_X] + SPEED; // move ball
-			if (ball[IDX_X] >= (resolution[IDX_X] - 6)) {
+		if (ball.dirHori == 'R') {
+			ball.position[IDX_X] = ball.position[IDX_X] + SPEED; // move ball
+			if (ball.position[IDX_X] >= (resolution[IDX_X] - 6)) {
 				// ball is at the AI edge of the screen
-				if ((ai.position + 12) >= ball[IDX_Y] && (ai.position - 12) <= ball[IDX_Y]) {
+				if ((ai.position + 12) >= ball.position[IDX_Y] && (ai.position - 12) <= ball.position[IDX_Y]) {
 					// ball hits AI paddle
-					if (ball[IDX_Y] > (ai.position + 4)) {
+					if (ball.position[IDX_Y] > (ai.position + 4)) {
 						// deflect ball down
-						ballDirectionVerti = 'D';
-					} else if (ball[IDX_Y] < (ai.position - 4)) {
+						ball.dirVert = 'D';
+					} else if (ball.position[IDX_Y] < (ai.position - 4)) {
 						// deflect ball up
-						ballDirectionVerti = 'U';
+						ball.dirVert = 'U';
 					} else {
 						// deflect ball straight
-						ballDirectionVerti = 'S';
+						ball.dirVert = 'S';
 					}
 					// change ball direction
-					ballDirectionHori = 'L';
+					ball.dirHori = 'L';
 				} else {
 					// GOAL!
-					ball[IDX_X] = 6; // move ball to other side of screen
-					ballDirectionVerti = 'S'; // reset ball to straight travel
-					ball[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
+					ball.position[IDX_X] = 6; // move ball to other side of screen
+					ball.dirVert = 'S'; // reset ball to straight travel
+					ball.position[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
 					++player.score; // increase player score
 				}
 			}
 		}
 
-		if (ballDirectionHori == 'L') {
-			ball[IDX_X] = ball[IDX_X] - SPEED; // move ball
-			if (ball[IDX_X] <= 6) {
+		if (ball.dirHori == 'L') {
+			ball.position[IDX_X] = ball.position[IDX_X] - SPEED; // move ball
+			if (ball.position[IDX_X] <= 6) {
 				// ball is at the player edge of the screen
-				if ((player.position + 12) >= ball[IDX_Y]
-						&& (player.position - 12) <= ball[IDX_Y]) {
+				if ((player.position + 12) >= ball.position[IDX_Y]
+						&& (player.position - 12) <= ball.position[IDX_Y]) {
 					// ball hits player paddle
-					if (ball[IDX_Y] > (player.position + 4)) {
+					if (ball.position[IDX_Y] > (player.position + 4)) {
 						// deflect ball down
-						ballDirectionVerti = 'D';
-					} else if (ball[IDX_Y] < (player.position - 4)) {
+						ball.dirVert = 'D';
+					} else if (ball.position[IDX_Y] < (player.position - 4)) {
 						// deflect ball up
-						ballDirectionVerti = 'U';
+						ball.dirVert = 'U';
 					} else {
 						// deflect ball straight
-						ballDirectionVerti = 'S';
+						ball.dirVert = 'S';
 					}
 					// change ball direction
-					ballDirectionHori = 'R';
+					ball.dirHori = 'R';
 				} else {
-					ball[IDX_X] = resolution[IDX_X] - 6; // move ball to other side of screen
-					ballDirectionVerti = 'S'; // reset ball to straight travel
-					ball[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
+					ball.position[IDX_X] = resolution[IDX_X] - 6; // move ball to other side of screen
+					ball.dirVert = 'S'; // reset ball to straight travel
+					ball.position[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
 					++ai.score; // increase AI score
 				}
 			}
 		}
-		drawBall(ball[IDX_X], ball[IDX_Y]);
+		drawBall(ball.position[IDX_X], ball.position[IDX_Y]);
 		player.position = analogRead(A2); // read player potentiometer
 		player.position = map(player.position, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
 		drawPlayerPaddle(player.position);
@@ -168,9 +174,9 @@ void loop() {
 
 void moveAi() {
 	// move the AI paddle
-	if (ball[IDX_Y] > ai.position) {
+	if (ball.position[IDX_Y] > ai.position) {
 		++ai.position;
-	} else if (ball[IDX_Y] < ai.position) {
+	} else if (ball.position[IDX_Y] < ai.position) {
 		--ai.position;
 	}
 }
