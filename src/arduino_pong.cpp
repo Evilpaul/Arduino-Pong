@@ -13,6 +13,8 @@
 #define IDX_X 0
 #define IDX_Y 1
 
+#define PADDLE_HEIGHT 5
+
 /******************************************************************************/
 /*------------------------Private Variables/Constants-------------------------*/
 /******************************************************************************/
@@ -213,11 +215,7 @@ void drawBlock(int posX, int posY, int height, int width) {
 }
 
 void drawPaddle(int column, int row) {
-	drawBlock(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH, PADDLE_WIDTH);
-	drawBlock(column, row - PADDLE_WIDTH, PADDLE_WIDTH, PADDLE_WIDTH);
-	drawBlock(column, row, PADDLE_WIDTH, PADDLE_WIDTH);
-	drawBlock(column, row + PADDLE_WIDTH, PADDLE_WIDTH, PADDLE_WIDTH);
-	drawBlock(column, row + (PADDLE_WIDTH * 2), PADDLE_WIDTH, PADDLE_WIDTH);
+	drawBlock(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH * PADDLE_HEIGHT, PADDLE_WIDTH);
 }
 
 void drawBall(int x, int y) {
