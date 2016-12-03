@@ -31,7 +31,6 @@ Adafruit_SSD1306 display(4);
 int resolution[2] = { 128, 64 }, ball[2] = { 20, (resolution[1] / 2) };
 int playerScore = 0, aiScore = 0, playerPos = 0, aiPos = 0;
 char ballDirectionHori = 'R', ballDirectionVerti = 'S';
-boolean inProgress = true;
 
 /******************************************************************************/
 /*-------------------------Function Prototypes--------------------------------*/
@@ -57,11 +56,19 @@ void loop() {
 	display.clearDisplay();
 
 	if (aiScore > 9 || playerScore > 9) {
-		// check game state
-		inProgress = false;
+		// somebody has won
+		display.clearDisplay();
+		display.setTextSize(4);
+		display.setTextColor(WHITE);
+		display.setCursor(0, 0);
+		// figure out who
+		if (aiScore > playerScore) {
+			display.println("YOU  LOSE!");
+		} else if (playerScore > aiScore) {
+			display.println("YOU  WIN!");
+		}
 	}
-
-	if (inProgress) {
+	else {
 		if (ballDirectionVerti == 'U') {
 			// move ball up diagonally
 			ball[1] = ball[1] - SPEED;
@@ -143,18 +150,6 @@ void loop() {
 		moveAi();
 		drawNet();
 		drawScore();
-	} else {
-		// somebody has won
-		display.clearDisplay();
-		display.setTextSize(4);
-		display.setTextColor(WHITE);
-		display.setCursor(0, 0);
-		// figure out who
-		if (aiScore > playerScore) {
-			display.println("YOU  LOSE!");
-		} else if (playerScore > aiScore) {
-			display.println("YOU  WIN!");
-		}
 	}
 
 	display.display();
