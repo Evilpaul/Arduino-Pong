@@ -118,7 +118,7 @@ void loop() {
 		}
 	}
 	else {
-		// move ball up diagonally
+		// move ball up vertically
 		ball.position[IDX_Y] = ball.position[IDX_Y] + (SPEED * ball.dirVert);
 		if (ball.position[IDX_Y] <= 0) {
 			// bounce the ball off the top
