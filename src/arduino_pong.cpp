@@ -25,6 +25,11 @@ const int PIXEL_SIZE = 8, WALL_WIDTH = 4, PADDLE_WIDTH = 4, BALL_SIZE = 4, SPEED
 /******************************************************************************/
 /*-----------------------------Data Structures--------------------------------*/
 /******************************************************************************/
+typedef struct
+{
+	int score = 0;
+	int position = 0;
+} playerData;
 
 /******************************************************************************/
 /*------------------------------Global variables------------------------------*/
@@ -32,8 +37,10 @@ const int PIXEL_SIZE = 8, WALL_WIDTH = 4, PADDLE_WIDTH = 4, BALL_SIZE = 4, SPEED
 Adafruit_SSD1306 display(OLED_RESET);
 
 int resolution[2] = { 128, 64 }, ball[2] = { 20, (resolution[IDX_Y] / 2) };
-int playerScore = 0, aiScore = 0, playerPos = 0, aiPos = 0;
 char ballDirectionHori = 'R', ballDirectionVerti = 'S';
+
+playerData player;
+playerData ai;
 
 /******************************************************************************/
 /*-------------------------Function Prototypes--------------------------------*/
@@ -58,16 +65,16 @@ void setup() {
 void loop() {
 	display.clearDisplay();
 
-	if (aiScore > 9 || playerScore > 9) {
+	if (ai.score > 9 || player.score > 9) {
 		// somebody has won
 		display.clearDisplay();
 		display.setTextSize(4);
 		display.setTextColor(WHITE);
 		display.setCursor(0, 0);
 		// figure out who
-		if (aiScore > playerScore) {
+		if (ai.score > player.score) {
 			display.println("YOU  LOSE!");
-		} else if (playerScore > aiScore) {
+		} else if (player.score > ai.score) {
 			display.println("YOU  WIN!");
 		}
 	}
@@ -95,12 +102,12 @@ void loop() {
 			ball[IDX_X] = ball[IDX_X] + SPEED; // move ball
 			if (ball[IDX_X] >= (resolution[IDX_X] - 6)) {
 				// ball is at the AI edge of the screen
-				if ((aiPos + 12) >= ball[IDX_Y] && (aiPos - 12) <= ball[IDX_Y]) {
+				if ((ai.position + 12) >= ball[IDX_Y] && (ai.position - 12) <= ball[IDX_Y]) {
 					// ball hits AI paddle
-					if (ball[IDX_Y] > (aiPos + 4)) {
+					if (ball[IDX_Y] > (ai.position + 4)) {
 						// deflect ball down
 						ballDirectionVerti = 'D';
-					} else if (ball[IDX_Y] < (aiPos - 4)) {
+					} else if (ball[IDX_Y] < (ai.position - 4)) {
 						// deflect ball up
 						ballDirectionVerti = 'U';
 					} else {
@@ -114,7 +121,7 @@ void loop() {
 					ball[IDX_X] = 6; // move ball to other side of screen
 					ballDirectionVerti = 'S'; // reset ball to straight travel
 					ball[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
-					++playerScore; // increase player score
+					++player.score; // increase player score
 				}
 			}
 		}
@@ -123,13 +130,13 @@ void loop() {
 			ball[IDX_X] = ball[IDX_X] - SPEED; // move ball
 			if (ball[IDX_X] <= 6) {
 				// ball is at the player edge of the screen
-				if ((playerPos + 12) >= ball[IDX_Y]
-						&& (playerPos - 12) <= ball[IDX_Y]) {
+				if ((player.position + 12) >= ball[IDX_Y]
+						&& (player.position - 12) <= ball[IDX_Y]) {
 					// ball hits player paddle
-					if (ball[IDX_Y] > (playerPos + 4)) {
+					if (ball[IDX_Y] > (player.position + 4)) {
 						// deflect ball down
 						ballDirectionVerti = 'D';
-					} else if (ball[IDX_Y] < (playerPos - 4)) {
+					} else if (ball[IDX_Y] < (player.position - 4)) {
 						// deflect ball up
 						ballDirectionVerti = 'U';
 					} else {
@@ -142,16 +149,16 @@ void loop() {
 					ball[IDX_X] = resolution[IDX_X] - 6; // move ball to other side of screen
 					ballDirectionVerti = 'S'; // reset ball to straight travel
 					ball[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
-					++aiScore; // increase AI score
+					++ai.score; // increase AI score
 				}
 			}
 		}
 		drawBall(ball[IDX_X], ball[IDX_Y]);
-		playerPos = analogRead(A2); // read player potentiometer
-		playerPos = map(playerPos, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
-		drawPlayerPaddle(playerPos);
+		player.position = analogRead(A2); // read player potentiometer
+		player.position = map(player.position, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
+		drawPlayerPaddle(player.position);
 		moveAi();
-		drawAiPaddle(aiPos);
+		drawAiPaddle(ai.position);
 		drawNet();
 		drawScore();
 	}
@@ -161,10 +168,10 @@ void loop() {
 
 void moveAi() {
 	// move the AI paddle
-	if (ball[IDX_Y] > aiPos) {
-		++aiPos;
-	} else if (ball[IDX_Y] < aiPos) {
-		--aiPos;
+	if (ball[IDX_Y] > ai.position) {
+		++ai.position;
+	} else if (ball[IDX_Y] < ai.position) {
+		--ai.position;
 	}
 }
 
@@ -173,10 +180,10 @@ void drawScore() {
 	display.setTextSize(2);
 	display.setTextColor(WHITE);
 	display.setCursor(45, 0);
-	display.println(playerScore);
+	display.println(player.score);
 
 	display.setCursor(75, 0);
-	display.println(aiScore);
+	display.println(ai.score);
 }
 
 void drawNet() {
