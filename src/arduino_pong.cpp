@@ -148,6 +148,7 @@ void loop() {
 		playerPos = map(playerPos, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
 		drawPlayerPaddle(playerPos);
 		moveAi();
+		drawAiPaddle(aiPos);
 		drawNet();
 		drawScore();
 	}
@@ -162,7 +163,6 @@ void moveAi() {
 	} else if (ball[1] < aiPos) {
 		--aiPos;
 	}
-	drawAiPaddle(aiPos);
 }
 
 void drawScore() {
