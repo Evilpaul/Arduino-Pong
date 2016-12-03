@@ -85,14 +85,15 @@ void loop() {
 
 	if (ai.score > 9 || player.score > 9) {
 		// somebody has won
-		display.clearDisplay();
 		display.setTextSize(4);
 		display.setTextColor(WHITE);
 		display.setCursor(0, 0);
+
 		// figure out who
 		if (ai.score > player.score) {
 			display.println("YOU  LOSE!");
-		} else if (player.score > ai.score) {
+		}
+		else {
 			display.println("YOU  WIN!");
 		}
 	}
