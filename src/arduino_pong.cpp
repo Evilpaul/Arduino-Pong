@@ -17,7 +17,7 @@
 /*------------------------Private Variables/Constants-------------------------*/
 /******************************************************************************/
 const int PIXEL_SIZE = 8, WALL_WIDTH = 4, PADDLE_WIDTH = 4, BALL_SIZE = 4, SPEED = 3;
-const int resolution[2] = { 128, 64 };
+const int RESOLUTION[2] = { 128, 64 };
 
 /******************************************************************************/
 /*--------------------------------Enumerations--------------------------------*/
@@ -46,7 +46,7 @@ typedef struct
 
 typedef struct
 {
-	int position[2] = {20, (resolution[IDX_Y] / 2)};
+	int position[2] = {20, (RESOLUTION[IDX_Y] / 2)};
 	HzDir dirHori = HzDir_Right;
 	VtDir dirVert = VtDir_Straight;
 } ballData;
@@ -104,14 +104,14 @@ void loop() {
 			// bounce the ball off the top
 			ball.dirVert = VtDir_Down;
 		}
-		if (ball.position[IDX_Y] >= resolution[IDX_Y]) {
+		if (ball.position[IDX_Y] >= RESOLUTION[IDX_Y]) {
 			// bounce the ball off the bottom
 			ball.dirVert = VtDir_Up;
 		}
 
 		ball.position[IDX_X] = ball.position[IDX_X] + (SPEED * ball.dirHori); // move ball
 		if (ball.dirHori == HzDir_Right) {
-			if (ball.position[IDX_X] >= (resolution[IDX_X] - 6)) {
+			if (ball.position[IDX_X] >= (RESOLUTION[IDX_X] - 6)) {
 				// ball is at the AI edge of the screen
 				if ((ai.position + 12) >= ball.position[IDX_Y] && (ai.position - 12) <= ball.position[IDX_Y]) {
 					// ball hits AI paddle
@@ -131,7 +131,7 @@ void loop() {
 					// GOAL!
 					ball.position[IDX_X] = 6; // move ball to other side of screen
 					ball.dirVert = VtDir_Straight; // reset ball to straight travel
-					ball.position[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
+					ball.position[IDX_Y] = RESOLUTION[IDX_Y] / 2; // move ball to middle of screen
 					++player.score; // increase player score
 				}
 			}
@@ -156,9 +156,9 @@ void loop() {
 					// change ball direction
 					ball.dirHori = HzDir_Right;
 				} else {
-					ball.position[IDX_X] = resolution[IDX_X] - 6; // move ball to other side of screen
+					ball.position[IDX_X] = RESOLUTION[IDX_X] - 6; // move ball to other side of screen
 					ball.dirVert = VtDir_Straight; // reset ball to straight travel
-					ball.position[IDX_Y] = resolution[IDX_Y] / 2; // move ball to middle of screen
+					ball.position[IDX_Y] = RESOLUTION[IDX_Y] / 2; // move ball to middle of screen
 					++ai.score; // increase AI score
 				}
 			}
@@ -197,8 +197,8 @@ void drawScore() {
 }
 
 void drawNet() {
-	for (int i = 0; i < (resolution[IDX_Y] / WALL_WIDTH); ++i) {
-		drawPixel(((resolution[IDX_X] / 2) - 1),
+	for (int i = 0; i < (RESOLUTION[IDX_Y] / WALL_WIDTH); ++i) {
+		drawPixel(((RESOLUTION[IDX_X] / 2) - 1),
 				i * (WALL_WIDTH) + (WALL_WIDTH * i), WALL_WIDTH);
 	}
 }
