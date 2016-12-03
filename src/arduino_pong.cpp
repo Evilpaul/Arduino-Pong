@@ -205,10 +205,9 @@ void drawNet() {
 
 void drawPixel(int posX, int posY, int dimensions) {
 	// draw group of pixels
-	for (int x = 0; x < dimensions; ++x) {
-		for (int y = 0; y < dimensions; ++y) {
-			display.drawPixel((posX + x), (posY + y), WHITE);
-		}
+	for (int i = posX; i < posX + dimensions; i++)
+	{
+		display.drawFastVLine(i, posY, dimensions, WHITE);
 	}
 }
 
