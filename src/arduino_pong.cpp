@@ -24,15 +24,15 @@ const int resolution[2] = { 128, 64 };
 /******************************************************************************/
 typedef enum
 {
-	HzDir_Left,
-	HzDir_Right
+	HzDir_Left = -1,
+	HzDir_Right = 1
 } HzDir;
 
 typedef enum
 {
-	VtDir_Up,
-	VtDir_Straight,
-	VtDir_Down
+	VtDir_Up = -1,
+	VtDir_Straight = 0,
+	VtDir_Down = 1
 } VtDir;
 
 /******************************************************************************/
@@ -98,16 +98,8 @@ void loop() {
 		}
 	}
 	else {
-		if (ball.dirVert == VtDir_Up) {
-			// move ball up diagonally
-			ball.position[IDX_Y] = ball.position[IDX_Y] - SPEED;
-		}
-
-		if (ball.dirVert == VtDir_Down) {
-			// move ball down diagonally
-			ball.position[IDX_Y] = ball.position[IDX_Y] + SPEED;
-		}
-
+		// move ball up diagonally
+		ball.position[IDX_Y] = ball.position[IDX_Y] + (SPEED * ball.dirVert);
 		if (ball.position[IDX_Y] <= 0) {
 			// bounce the ball off the top
 			ball.dirVert = VtDir_Down;
@@ -117,8 +109,8 @@ void loop() {
 			ball.dirVert = VtDir_Up;
 		}
 
+		ball.position[IDX_X] = ball.position[IDX_X] + (SPEED * ball.dirHori); // move ball
 		if (ball.dirHori == HzDir_Right) {
-			ball.position[IDX_X] = ball.position[IDX_X] + SPEED; // move ball
 			if (ball.position[IDX_X] >= (resolution[IDX_X] - 6)) {
 				// ball is at the AI edge of the screen
 				if ((ai.position + 12) >= ball.position[IDX_Y] && (ai.position - 12) <= ball.position[IDX_Y]) {
@@ -146,7 +138,6 @@ void loop() {
 		}
 
 		if (ball.dirHori == HzDir_Left) {
-			ball.position[IDX_X] = ball.position[IDX_X] - SPEED; // move ball
 			if (ball.position[IDX_X] <= 6) {
 				// ball is at the player edge of the screen
 				if ((player.position + 12) >= ball.position[IDX_Y]
