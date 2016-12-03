@@ -24,7 +24,7 @@
 /******************************************************************************/
 /*------------------------Private Variables/Constants-------------------------*/
 /******************************************************************************/
-const int RESOLUTION[2] = { 128, 64 };
+const int RESOLUTION[2] = {128, 64};
 const int PLAYER_COLUMN = 0;
 const int AI_COLUMN = RESOLUTION[IDX_X] - PADDLE_WIDTH;
 
@@ -91,7 +91,8 @@ void checkGoal(playerData *check, playerData *other);
 /******************************************************************************/
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
-void setup() {
+void setup()
+{
 	player.resetPos = PLAYER_RESET_POS;
 	ai.resetPos = AI_RESET_POS;
 
@@ -100,55 +101,70 @@ void setup() {
 	display.display();
 }
 
-void loop() {
+void loop()
+{
 	display.clearDisplay();
 
-	if (ai.score > MAX_SCORE || player.score > MAX_SCORE) {
+	if (ai.score > MAX_SCORE || player.score > MAX_SCORE)
+	{
 		// somebody has won
 		display.setTextSize(4);
 		display.setTextColor(WHITE);
 		display.setCursor(0, 0);
 
 		// figure out who
-		if (ai.score > player.score) {
+		if (ai.score > player.score)
+		{
 			display.println("YOU  LOSE!");
 		}
-		else {
+		else
+		{
 			display.println("YOU  WIN!");
 		}
 	}
-	else {
+	else
+	{
 		// move ball up vertically
 		ball.position[IDX_Y] = ball.position[IDX_Y] + (SPEED * ball.dirVert);
-		if (ball.position[IDX_Y] <= 0) {
+		if (ball.position[IDX_Y] <= 0)
+		{
 			// bounce the ball off the top
 			ball.dirVert = VtDir_Down;
 		}
-		if (ball.position[IDX_Y] >= RESOLUTION[IDX_Y]) {
+		if (ball.position[IDX_Y] >= RESOLUTION[IDX_Y])
+		{
 			// bounce the ball off the bottom
 			ball.dirVert = VtDir_Up;
 		}
 
 		// move ball horizontally
 		ball.position[IDX_X] = ball.position[IDX_X] + (SPEED * ball.dirHori);
-		if (ball.dirHori == HzDir_Right) {
-			if (ball.position[IDX_X] >= (RESOLUTION[IDX_X] - COLLISION_WIDTH)) {
+		if (ball.dirHori == HzDir_Right)
+		{
+			if (ball.position[IDX_X] >= (RESOLUTION[IDX_X] - COLLISION_WIDTH))
+			{
 				// ball is at the AI edge of the screen
 				checkGoal(&ai, &player);
 			}
 		}
-		else if (ball.dirHori == HzDir_Left) {
-			if (ball.position[IDX_X] <= COLLISION_WIDTH) {
+		else if (ball.dirHori == HzDir_Left)
+		{
+			if (ball.position[IDX_X] <= COLLISION_WIDTH)
+			{
 				// ball is at the player edge of the screen
 				checkGoal(&player, &ai);
 			}
 		}
+
 		drawBall(ball.position[IDX_X], ball.position[IDX_Y]);
-		player.position = analogRead(A2); // read player potentiometer
-		player.position = map(player.position, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
+
+		int adc_val = analogRead(A2); // read player potentiometer
+		player.position = map(adc_val, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
 		drawPaddle(PLAYER_COLUMN, player.position);
+
 		moveAi();
 		drawPaddle(AI_COLUMN, ai.position);
+
 		drawNet();
 		drawScore();
 	}
@@ -156,16 +172,20 @@ void loop() {
 	display.display();
 }
 
-void moveAi() {
+void moveAi()
+{
 	// move the AI paddle
-	if (ball.position[IDX_Y] > ai.position) {
-		++ai.position;
-	} else if (ball.position[IDX_Y] < ai.position) {
-		--ai.position;
+	if (ball.position[IDX_Y] > ai.position)
+	{
+		ai.position++;
+	} else if (ball.position[IDX_Y] < ai.position)
+	{
+		ai.position--;
 	}
 }
 
-void drawScore() {
+void drawScore()
+{
 	// draw AI and player scores
 	display.setTextSize(2);
 	display.setTextColor(WHITE);
@@ -176,14 +196,16 @@ void drawScore() {
 	display.println(ai.score);
 }
 
-void drawNet() {
-	for (int i = 0; i < (RESOLUTION[IDX_Y] / WALL_WIDTH); ++i) {
-		drawBlock(((RESOLUTION[IDX_X] / 2) - 1),
-				i * (WALL_WIDTH) + (WALL_WIDTH * i), WALL_WIDTH, WALL_WIDTH);
+void drawNet()
+{
+	for (int i = 0; i < (RESOLUTION[IDX_Y] / WALL_WIDTH); i++)
+	{
+		drawBlock((RESOLUTION[IDX_X] / 2) - 1, WALL_WIDTH * i * 2, WALL_WIDTH, WALL_WIDTH);
 	}
 }
 
-void drawBlock(int posX, int posY, int height, int width) {
+void drawBlock(int posX, int posY, int height, int width)
+{
 	// draw group of pixels
 	for (int i = posX; i < posX + width; i++)
 	{
@@ -191,11 +213,13 @@ void drawBlock(int posX, int posY, int height, int width) {
 	}
 }
 
-void drawPaddle(int column, int row) {
+void drawPaddle(int column, int row)
+{
 	drawBlock(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH * PADDLE_HEIGHT, PADDLE_WIDTH);
 }
 
-void drawBall(int x, int y) {
+void drawBall(int x, int y)
+{
 	display.drawCircle(x, y, BALL_SIZE, WHITE);
 }
 
