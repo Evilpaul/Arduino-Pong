@@ -129,7 +129,8 @@ void loop() {
 			ball.dirVert = VtDir_Up;
 		}
 
-		ball.position[IDX_X] = ball.position[IDX_X] + (SPEED * ball.dirHori); // move ball
+		// move ball horizontally
+		ball.position[IDX_X] = ball.position[IDX_X] + (SPEED * ball.dirHori);
 		if (ball.dirHori == HzDir_Right) {
 			if (ball.position[IDX_X] >= (RESOLUTION[IDX_X] - COLLISION_WIDTH)) {
 				// ball is at the AI edge of the screen
