@@ -69,7 +69,7 @@ void moveAi();
 void drawScore();
 void drawNet();
 void drawPixel(int posX, int posY, int dimensions);
-void drawPaddle(int row, int column);
+void drawPaddle(int column, int row);
 void drawBall(int x, int y);
 
 /******************************************************************************/
@@ -212,7 +212,7 @@ void drawPixel(int posX, int posY, int dimensions) {
 	}
 }
 
-void drawPaddle(int row, int column) {
+void drawPaddle(int column, int row) {
 	drawPixel(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH);
 	drawPixel(column, row - PADDLE_WIDTH, PADDLE_WIDTH);
 	drawPixel(column, row, PADDLE_WIDTH);
