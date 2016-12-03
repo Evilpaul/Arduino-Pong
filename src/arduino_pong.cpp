@@ -68,7 +68,7 @@ ballData ball;
 void moveAi();
 void drawScore();
 void drawNet();
-void drawPixel(int posX, int posY, int dimensions);
+void drawBlock(int posX, int posY, int height, int width);
 void drawPaddle(int column, int row);
 void drawBall(int x, int y);
 
@@ -199,25 +199,25 @@ void drawScore() {
 
 void drawNet() {
 	for (int i = 0; i < (RESOLUTION[IDX_Y] / WALL_WIDTH); ++i) {
-		drawPixel(((RESOLUTION[IDX_X] / 2) - 1),
-				i * (WALL_WIDTH) + (WALL_WIDTH * i), WALL_WIDTH);
+		drawBlock(((RESOLUTION[IDX_X] / 2) - 1),
+				i * (WALL_WIDTH) + (WALL_WIDTH * i), WALL_WIDTH, WALL_WIDTH);
 	}
 }
 
-void drawPixel(int posX, int posY, int dimensions) {
+void drawBlock(int posX, int posY, int height, int width) {
 	// draw group of pixels
-	for (int i = posX; i < posX + dimensions; i++)
+	for (int i = posX; i < posX + width; i++)
 	{
-		display.drawFastVLine(i, posY, dimensions, WHITE);
+		display.drawFastVLine(i, posY, height, WHITE);
 	}
 }
 
 void drawPaddle(int column, int row) {
-	drawPixel(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH);
-	drawPixel(column, row - PADDLE_WIDTH, PADDLE_WIDTH);
-	drawPixel(column, row, PADDLE_WIDTH);
-	drawPixel(column, row + PADDLE_WIDTH, PADDLE_WIDTH);
-	drawPixel(column, row + (PADDLE_WIDTH * 2), PADDLE_WIDTH);
+	drawBlock(column, row - (PADDLE_WIDTH * 2), PADDLE_WIDTH, PADDLE_WIDTH);
+	drawBlock(column, row - PADDLE_WIDTH, PADDLE_WIDTH, PADDLE_WIDTH);
+	drawBlock(column, row, PADDLE_WIDTH, PADDLE_WIDTH);
+	drawBlock(column, row + PADDLE_WIDTH, PADDLE_WIDTH, PADDLE_WIDTH);
+	drawBlock(column, row + (PADDLE_WIDTH * 2), PADDLE_WIDTH, PADDLE_WIDTH);
 }
 
 void drawBall(int x, int y) {
