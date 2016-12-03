@@ -17,6 +17,7 @@
 /*------------------------Private Variables/Constants-------------------------*/
 /******************************************************************************/
 const int PIXEL_SIZE = 8, WALL_WIDTH = 4, PADDLE_WIDTH = 4, BALL_SIZE = 4, SPEED = 3;
+const int resolution[2] = { 128, 64 };
 
 /******************************************************************************/
 /*--------------------------------Enumerations--------------------------------*/
@@ -36,7 +37,6 @@ typedef struct
 /******************************************************************************/
 Adafruit_SSD1306 display(OLED_RESET);
 
-int resolution[2] = { 128, 64 }, ball[2] = { 20, (resolution[IDX_Y] / 2) };
 char ballDirectionHori = 'R', ballDirectionVerti = 'S';
 
 playerData player;
