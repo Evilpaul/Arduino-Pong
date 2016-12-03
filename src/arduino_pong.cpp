@@ -75,7 +75,7 @@ void drawBall(int x, int y);
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
 void setup() {
-	display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+	display.begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
 	display.clearDisplay();
 	display.display();
 }
