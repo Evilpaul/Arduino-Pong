@@ -68,6 +68,18 @@ typedef struct
 	VtDir dirVert = VtDir_Straight;
 } ballData;
 
+typedef struct
+{
+	uint8_t L;
+	uint8_t H;
+} bits;
+
+typedef union
+{
+	bits B;
+	uint16_t V;
+} adcResult;
+
 /******************************************************************************/
 /*------------------------------Global variables------------------------------*/
 /******************************************************************************/
@@ -76,6 +88,9 @@ Adafruit_SSD1306 display(OLED_RESET);
 playerData player;
 playerData ai;
 ballData ball;
+
+
+static volatile adcResult adc;
 
 /******************************************************************************/
 /*-------------------------Function Prototypes--------------------------------*/
@@ -95,6 +110,20 @@ void setup()
 {
 	player.resetPos = PLAYER_RESET_POS;
 	ai.resetPos = AI_RESET_POS;
+	adc.V = 0;
+
+	// put your setup code here, to run once:
+	ADCSRA = 0;				// clear ADCSRA register
+	ADCSRB = 0;				// clear ADCSRB register
+	ADMUX = 0;				// clear ADMUX register
+	ADMUX |= (2 & 0x07);	// set A2 analog input pin
+	ADMUX |= (1 << REFS0);	// set reference voltage
+
+	ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);	// 128 prescaler
+	ADCSRA |= (1 << ADATE);	// enable auto trigger
+	ADCSRA |= (1 << ADIE);	// enable interrupts when measurement complete
+	ADCSRA |= (1 << ADEN);	// enable ADC
+	ADCSRA |= (1 << ADSC);	// start ADC measurements
 
 	display.begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
 	display.clearDisplay();
@@ -158,8 +187,7 @@ void loop()
 
 		drawBall(ball.position[IDX_X], ball.position[IDX_Y]);
 
-		int adc_val = analogRead(A2); // read player potentiometer
-		player.position = map(adc_val, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
+		player.position = map(adc.V, 0, 1023, 8, 54); // convert value from 0 - 1023 to 8 - 54
 		drawPaddle(PLAYER_COLUMN, player.position);
 
 		moveAi();
@@ -255,4 +283,11 @@ void checkGoal(playerData *check, playerData *other)
 		ball.position[IDX_Y] = other->resetPos[IDX_Y]; // move ball to middle of screen
 		other->score++; // increase opponent score
 	}
+}
+
+ISR(ADC_vect)
+{
+	// when new ADC value ready, MUST read ADCH last
+	adc.B.L = ADCL;
+	adc.B.H = ADCH;
 }
