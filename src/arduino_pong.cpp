@@ -17,7 +17,7 @@
 #define PADDLE_WIDTH 4
 #define PADDLE_HEIGHT 5
 #define BALL_SIZE 4
-#define SPEED 3
+#define SPEED 5
 
 #define MAX_SCORE 9
 
