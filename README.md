@@ -3,3 +3,4 @@
 Based upon the example from http://www.makeuseof.com/tag/arduino-retro-gaming-oled-display/
 
 ![layout](layout.png)
+![schematic](schematic.png)
